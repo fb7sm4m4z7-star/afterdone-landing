@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy | Afterdone</title>
+<meta name="description" content="How the Afterdone app and getafterdone.com handle data. The app runs on Atlassian Forge and keeps your data inside Atlassian.">
+<link rel="stylesheet" href="/assets/page.css">
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="/">Afterdone</a><nav><a href="/docs/">Docs</a><a href="/support/">Support</a><a href="/security/">Security</a><a href="/privacy/" aria-current="page">Privacy</a><a href="/terms/">Terms</a></nav></div></header>
+<main><div class="wrap">
+<h1>Privacy Policy</h1>
+<p class="meta">Last updated: November 27, 2026</p>
+
+<p>This policy explains what data the Afterdone app and the getafterdone.com website handle, and why. Afterdone is built to keep your Jira and Confluence data inside Atlassian: the app runs entirely on Atlassian's Forge platform and has no servers of its own.</p>
+
+<div class="box">
+<p><strong>In short</strong></p>
+<ul>
+<li>The app runs on Atlassian Forge with "Runs on Atlassian" architecture. It does not send your Jira or Confluence content to any server we operate or to any other third party.</li>
+<li>App results are stored in Forge storage inside your own Atlassian site and expire after 180 days.</li>
+<li>We do not sell personal data, and the app contains no tracking or analytics.</li>
+</ul>
+</div>
+
+<h2>1. Who we are</h2>
+<p>Afterdone ("Afterdone", "we", "us") is operated by an independent developer based in Italy. You can reach us at <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a> for any privacy question or request.</p>
+
+<h2>2. Scope</h2>
+<p>This policy covers:</p>
+<ul>
+<li>the Afterdone app for Jira and Confluence Cloud (the "App");</li>
+<li>the website getafterdone.com (the "Site");</li>
+<li>emails you send us and forms you fill in on the Site.</li>
+</ul>
+<p>Your use of Jira, Confluence, Rovo, and the Atlassian Marketplace is governed by Atlassian's own terms and privacy policy.</p>
+
+<h2>3. Data the App processes</h2>
+<p>When a Jira issue or Epic moves to a Done status, or a Jira version is released, the App reads the following through Atlassian's APIs, using only the permissions listed in our <a href="/security/">Security page</a>:</p>
+
+<div class="tbl"><table>
+<tr><th>Data</th><th>Why</th><th>Where it lives</th></tr>
+<tr><td>Jira issue fields: key, summary, type, status, resolution, fix versions, description, latest comments, remote links, and the summaries of Done child issues of an Epic</td><td>To know what was actually delivered</td><td>Read at check time, not stored, except the issue key, summary, and status saved with a finding</td></tr>
+<tr><td>Confluence page ID, title, URL, version number, and body text of pages linked to the issue or that mention its key</td><td>To compare the page with the Jira work</td><td>Read at check time. Only page ID, title, URL, version, and the quoted sentences are stored with a finding</td></tr>
+<tr><td>Findings: the conflicting page sentence, the Jira evidence, a short explanation, severity, review status, and timestamps</td><td>To show the Drift Report</td><td>Forge storage (KVS) of your installation, deleted automatically after 180 days</td></tr>
+<tr><td>Usage counters: checks run, tokens used, checks skipped, per month</td><td>To enforce the monthly check cap and show usage</td><td>Forge storage of your installation</td></tr>
+<tr><td>A hash of each issue and page pair</td><td>To skip pages that did not change since the last check</td><td>Forge storage of your installation</td></tr>
+</table></div>
+
+<p>Jira issues and Confluence pages may contain personal data, such as names or other information your team writes in them. The App processes this content only to detect contradictions between the page and the Jira work.</p>
+
+<h3>Language model processing</h3>
+<p>To compare a page with an issue, the App sends the page text and the issue details to the Forge LLMs API, a large language model service provided by Atlassian as part of Forge. The request is made from inside the Forge platform; we do not call any model provider directly. The App does not use your content to train any model. For how Atlassian handles Forge LLM requests, see Atlassian's documentation and terms.</p>
+
+<h3>Email notifications</h3>
+<p>When the App finds a new conflict, it can ask Jira to send an email to the issue's reporter and assignee through Jira's own notification feature. Jira decides delivery and respects each user's notification settings. The App never sees or stores email addresses.</p>
+
+<h3>App logs</h3>
+<p>Forge records technical logs when the App runs, such as issue keys, page IDs, error codes, and counts. Logs do not include page text. They stay in Atlassian's developer console, and we use them only to fix problems.</p>
+
+<h3>What the App does not do</h3>
+<ul>
+<li>No data egress: the App has no permission to contact external servers.</li>
+<li>No analytics, tracking, cookies, or advertising.</li>
+<li>No access to passwords, API tokens, or personal access tokens.</li>
+<li>No copy of your data outside your Atlassian site.</li>
+</ul>
+
+<h2>4. Our role</h2>
+<p>For the content of your Jira and Confluence sites, your organization decides what the App processes, and we act on your organization's behalf. The data itself stays on Atlassian's infrastructure, which Atlassian operates under its agreements with your organization. We do not have routine access to your Jira or Confluence content or to the findings stored in your site.</p>
+
+<h2>5. Data we receive as a business</h2>
+<ul>
+<li><strong>Marketplace information.</strong> When your organization installs or buys the App, Atlassian may share license and contact details with us, such as company name, technical and billing contact names and email addresses, and license status. We use them to provide the license, support, and important service notices, and to meet legal and tax obligations.</li>
+<li><strong>Support emails.</strong> If you email us, we keep your message and contact details to answer you and to keep a record of the request.</li>
+<li><strong>Site forms.</strong> If you request a Drift Audit or join the waitlist on the Site, we receive the details you enter, such as your name, work email, company, and answers. The form is hosted by Tally. We use the data only to reply and to deliver what you asked for.</li>
+<li><strong>Site hosting.</strong> The Site is a static website hosted on GitHub Pages. GitHub may log visitor IP addresses for security and operations. The Site sets no cookies and runs no analytics.</li>
+</ul>
+<p>Legal bases (EU/UK GDPR): performance of a contract or steps before one, our legitimate interest in answering requests and running a secure service, and compliance with legal obligations.</p>
+
+<h2>6. Service providers</h2>
+<div class="tbl"><table>
+<tr><th>Provider</th><th>Purpose</th><th>Data</th></tr>
+<tr><td>Atlassian (Forge platform, Forge LLMs API, Marketplace)</td><td>Hosting, storage, and processing of the App; licensing and billing</td><td>App data described in section 3; Marketplace data in section 5</td></tr>
+<tr><td>GitHub</td><td>Hosting the Site</td><td>Visitor IP addresses in server logs</td></tr>
+<tr><td>Tally</td><td>Site forms</td><td>What you enter in a form</td></tr>
+<tr><td>Porkbun</td><td>Domain and email forwarding for getafterdone.com</td><td>Emails you send us, in transit</td></tr>
+<tr><td>Google (Gmail)</td><td>Our mailbox for support email</td><td>Emails you send us</td></tr>
+</table></div>
+<p>Only the Atlassian services touch content from your Jira or Confluence sites.</p>
+
+<h2>7. International transfers</h2>
+<p>App data stays where Atlassian stores your site's data, according to Atlassian's data residency rules for Forge apps. Some providers in section 6 are based in the United States. Where personal data from the EEA, UK, or Switzerland is transferred there, the transfer relies on the provider's safeguards, such as the EU-U.S. Data Privacy Framework or Standard Contractual Clauses.</p>
+
+<h2>8. Retention</h2>
+<ul>
+<li>Findings in Forge storage are deleted automatically 180 days after the last check.</li>
+<li>When your organization uninstalls the App, Atlassian removes the App's Forge storage for that site according to its Forge data retention rules. We keep no copy.</li>
+<li>Support emails and form submissions: up to 24 months after our last contact, unless the law requires longer.</li>
+<li>Marketplace license and billing records: as long as required by tax and accounting law.</li>
+</ul>
+
+<h2>9. Your rights</h2>
+<p>Depending on where you live, you may have the right to access, correct, delete, restrict, or object to the processing of your personal data, to data portability, and to withdraw consent. Email <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a>. We answer within 30 days.</p>
+<p>For data the App holds inside your Atlassian site, the fastest way to delete it is to dismiss findings in the Drift Report or to uninstall the App. Your site administrator can also contact us.</p>
+<p>If you are in the EU, you can complain to your local data protection authority. In Italy, this is the Garante per la protezione dei dati personali (garanteprivacy.it).</p>
+
+<h2>10. California</h2>
+<p>We do not sell or share personal information for cross-context behavioral advertising, as defined by the CCPA/CPRA.</p>
+
+<h2>11. Children</h2>
+<p>The App and the Site are for businesses and are not directed to children under 16.</p>
+
+<h2>12. Security</h2>
+<p>See our <a href="/security/">Security page</a> for how the App protects data.</p>
+
+<h2>13. Changes</h2>
+<p>We will post any change to this policy on this page and update the date above. For material changes that affect customers, we will also notify the technical contact on the Marketplace license.</p>
+</div></main>
+<footer><div class="wrap">
+<p>Afterdone is an independent product and is not affiliated with or endorsed by Atlassian. Jira, Confluence, and Rovo are trademarks of Atlassian.</p>
+<p>Contact: <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a></p>
+</div></footer>
+</body>
+</html>

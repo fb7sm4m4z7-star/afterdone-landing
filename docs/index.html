@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation | Afterdone</title>
+<meta name="description" content="Set up and use Afterdone: triggers, the Drift Report, notifications, and limits.">
+<link rel="stylesheet" href="/assets/page.css">
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="/">Afterdone</a><nav><a href="/docs/" aria-current="page">Docs</a><a href="/support/">Support</a><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div></header>
+<main><div class="wrap">
+<h1>Documentation</h1>
+<p class="meta">Last updated: November 27, 2026</p>
+
+<p>Afterdone watches for Jira work that reaches Done and tells you which Confluence sentences no longer match it. This guide covers setup and daily use.</p>
+
+<h2>Requirements</h2>
+<ul>
+<li>Jira Cloud and Confluence Cloud on the same Atlassian site.</li>
+<li>A Jira administrator to install the App and open the Drift Report.</li>
+</ul>
+
+<h2>Install</h2>
+<ol>
+<li>Install Afterdone from the Atlassian Marketplace and approve the permissions. See the <a href="/security/">Security page</a> for why each permission is needed.</li>
+<li>Make sure the App can see the Confluence spaces you want checked. The App only reads pages it has access to.</li>
+<li>That's it. There's nothing to configure to start.</li>
+</ol>
+
+<h2>How checks start</h2>
+<ul>
+<li><strong>Issue or Epic moves to Done.</strong> This is the main trigger. Any status in Jira's Done category counts. For an Epic, the check also includes its Done child issues.</li>
+<li><strong>Version released.</strong> If your team uses Jira versions, a release checks its Done issues.</li>
+<li><strong>Manual check.</strong> In the Drift Report, enter an issue key such as <code>PROJ-123</code> and run a check.</li>
+</ul>
+
+<h2>Which pages are checked</h2>
+<ul>
+<li>Confluence pages linked to the issue.</li>
+<li>Pages that mention the issue key in their text.</li>
+</ul>
+<p>Up to 5 pages per issue. Tip: link the spec, runbook, or guide to the Epic, or mention the Epic key on the page, so Afterdone knows where to look.</p>
+
+<h2>Read the Drift Report</h2>
+<p>Open Jira, then <strong>Settings &gt; Apps &gt; Afterdone - Drift Report</strong>. Each finding shows:</p>
+<ul>
+<li>the page and the issue;</li>
+<li>the exact sentence on the page that conflicts;</li>
+<li>what Jira says instead, and why it's a conflict;</li>
+<li>severity: <strong>high</strong> (people would act wrongly), <strong>medium</strong> (misleading), or <strong>low</strong> (minor or outdated wording).</li>
+</ul>
+<p>Fix the page in Confluence, or <strong>Dismiss</strong> the finding if it's not a real problem. A page that hasn't changed since its last check isn't checked again, so dismissed findings stay quiet.</p>
+
+<h2>Email notifications</h2>
+<p>When a check finds new conflicts, Jira emails the issue's reporter and assignee with the conflicting sentences and a link to the page. Manual checks don't send emails. Jira's own notification settings apply.</p>
+
+<h2>Limits</h2>
+<ul>
+<li>Up to 300 checks per site per month. One check compares one issue with one page. Usage is shown in the Drift Report.</li>
+<li>Very long pages are truncated to their first part for the check.</li>
+<li>Findings are kept for 180 days.</li>
+</ul>
+
+<h2>Good to know</h2>
+<ul>
+<li>Afterdone uses an AI model to compare text. It can miss a conflict or flag a sentence that's fine. Treat findings as suggestions to review.</li>
+<li>Afterdone never edits your pages or issues.</li>
+<li>Uninstalling the App removes its data from your site.</li>
+</ul>
+
+<h2>Need help?</h2>
+<p>Email <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a>. We reply within 2 business days. More on the <a href="/support/">Support page</a>.</p>
+</div></main>
+<footer><div class="wrap">
+<p>Afterdone is an independent product and is not affiliated with or endorsed by Atlassian. Jira, Confluence, and Rovo are trademarks of Atlassian.</p>
+<p>Contact: <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a></p>
+</div></footer>
+</body>
+</html>

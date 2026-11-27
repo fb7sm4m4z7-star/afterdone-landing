@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security and data | Afterdone</title>
+<meta name="description" content="Afterdone runs on Atlassian Forge with no data egress. Scopes, data handling, and vulnerability reporting.">
+<link rel="stylesheet" href="/assets/page.css">
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="/">Afterdone</a><nav><a href="/docs/">Docs</a><a href="/support/">Support</a><a href="/security/" aria-current="page">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div></header>
+<main><div class="wrap">
+<h1>Security and data</h1>
+<p class="meta">Last updated: November 27, 2026</p>
+
+<div class="box">
+<p><strong>Runs on Atlassian.</strong> Afterdone is built on Atlassian Forge and runs only on Atlassian infrastructure. Your Jira and Confluence content never leaves Atlassian: no external servers, no Forge Remote, no outbound network permissions.</p>
+</div>
+
+<h2>Architecture</h2>
+<ol>
+<li>A Jira event fires when an issue or Epic moves to a Done status, or when a version is released.</li>
+<li>The App puts a job in a Forge async queue, so the work happens in the background in small batches.</li>
+<li>The job reads the issue and the Confluence pages linked to it or that mention its key.</li>
+<li>The App asks the Forge LLMs API, provided by Atlassian inside Forge, which sentences on the page contradict the Jira work.</li>
+<li>Results are saved in Forge storage (KVS) of your site and shown in the Drift Report admin page. Optionally, Jira emails the issue's reporter and assignee.</li>
+</ol>
+<p>Every step uses Atlassian-hosted compute, storage, and model services. We operate no servers or databases for the App.</p>
+
+<h2>Permissions (scopes) and why we need them</h2>
+<div class="tbl"><table>
+<tr><th>Scope</th><th>Why</th></tr>
+<tr><td><code>read:jira-work</code></td><td>Receive issue and version events; read the fields, comments, and links of the issue that reached Done; find Done child issues of an Epic and Done issues in a released version.</td></tr>
+<tr><td><code>write:jira-work</code></td><td>Send the conflict email to the issue's reporter and assignee through Jira's built-in notify API. The App does not edit issues.</td></tr>
+<tr><td><code>read:page:confluence</code></td><td>Read the text and version of the pages linked to the issue.</td></tr>
+<tr><td><code>search:confluence</code></td><td>Find pages that mention the issue key.</td></tr>
+<tr><td><code>storage:app</code></td><td>Save findings and usage counters in Forge storage.</td></tr>
+</table></div>
+<p>The App acts with the App's own Forge identity. It does not write to Confluence and does not change page permissions. It only sees pages that the App user can see in your site.</p>
+
+<h2>Data handling</h2>
+
+<div class="tbl"><table>
+<tr><th>Data</th><th>Why</th><th>Where it lives</th></tr>
+<tr><td>Jira issue fields: key, summary, type, status, resolution, fix versions, description, latest comments, remote links, and the summaries of Done child issues of an Epic</td><td>To know what was actually delivered</td><td>Read at check time, not stored, except the issue key, summary, and status saved with a finding</td></tr>
+<tr><td>Confluence page ID, title, URL, version number, and body text of pages linked to the issue or that mention its key</td><td>To compare the page with the Jira work</td><td>Read at check time. Only page ID, title, URL, version, and the quoted sentences are stored with a finding</td></tr>
+<tr><td>Findings: the conflicting page sentence, the Jira evidence, a short explanation, severity, review status, and timestamps</td><td>To show the Drift Report</td><td>Forge storage (KVS) of your installation, deleted automatically after 180 days</td></tr>
+<tr><td>Usage counters: checks run, tokens used, checks skipped, per month</td><td>To enforce the monthly check cap and show usage</td><td>Forge storage of your installation</td></tr>
+<tr><td>A hash of each issue and page pair</td><td>To skip pages that did not change since the last check</td><td>Forge storage of your installation</td></tr>
+</table></div>
+
+<ul>
+<li><strong>Storage location:</strong> Forge storage of your Atlassian site, managed by Atlassian, following Atlassian's Forge data residency rules.</li>
+<li><strong>Encryption:</strong> Atlassian encrypts Forge storage at rest and all traffic in transit. See Atlassian's Trust Center.</li>
+<li><strong>Retention:</strong> findings expire after 180 days; App storage is removed by Atlassian after uninstall.</li>
+<li><strong>Logs:</strong> technical logs (issue keys, page IDs, error codes, counts) stay in Atlassian's developer console. No page text.</li>
+<li><strong>Model training:</strong> the App does not use your data to train any model.</li>
+<li><strong>No secrets:</strong> the App does not store or access passwords, API tokens, or personal access tokens.</li>
+<li><strong>Sub-processors:</strong> none outside Atlassian for App data.</li>
+</ul>
+
+<h2>Access</h2>
+<p>We have no routine access to your Jira or Confluence content or to findings stored in your site. To investigate a problem, we may ask you for a screenshot or an issue key; we never ask for credentials.</p>
+
+<h2>Development practices</h2>
+<ul>
+<li>Least privilege: only the scopes listed above, reviewed before each release.</li>
+<li>No outbound network access, verified with Atlassian's Runs on Atlassian eligibility check before each production release.</li>
+<li>Source code in a private repository with two-factor authentication on developer accounts.</li>
+<li>Dependencies kept up to date; security advisories reviewed before release.</li>
+<li>Guardrails against model errors: a finding is kept only if its quoted sentence appears on the page.</li>
+<li>Cost and abuse guard: a monthly cap on model checks per site.</li>
+</ul>
+
+<h2>Report a vulnerability</h2>
+<p>Email <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a> with "Security" in the subject. We acknowledge reports within 2 business days and will keep you informed while we fix the issue. Please give us reasonable time to fix it before disclosing it publicly, and don't access data that isn't yours.</p>
+
+<h2>More</h2>
+<p><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">End User License Agreement</a> · <a href="/support/">Support</a></p>
+</div></main>
+<footer><div class="wrap">
+<p>Afterdone is an independent product and is not affiliated with or endorsed by Atlassian. Jira, Confluence, and Rovo are trademarks of Atlassian.</p>
+<p>Contact: <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a></p>
+</div></footer>
+</body>
+</html>
