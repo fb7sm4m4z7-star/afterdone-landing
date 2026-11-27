@@ -4,94 +4,209 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Afterdone: catch Confluence pages that drift after Jira work ships</title>
-<meta name="description" content="Afterdone flags the exact Confluence sentences that no longer match what you shipped in Jira, before Rovo quotes them. Runs entirely on Atlassian.">
+<meta name="description" content="When an Epic moves to Done in Jira, Afterdone finds the Confluence sentences it made wrong and tells you, before Rovo quotes them. Runs entirely on Atlassian.">
+<meta property="og:title" content="Afterdone: Epic Done. Page wrong. You get told.">
+<meta property="og:description" content="Afterdone finds the Confluence sentences that Jira work made wrong, before Rovo quotes them.">
+<meta property="og:image" content="https://getafterdone.com/media/drift-report.jpg">
+<meta name="theme-color" content="#0d1830">
 <style>
-:root{--ink:#14171f;--muted:#5b6170;--line:#e4e6eb;--bg:#fff;--soft:#f6f7f9;--accent:#1f4fd8;--accent-ink:#fff}
+:root{--navy:#0d1830;--navy-2:#16244a;--ink:#14171f;--muted:#5b6170;--line:#e4e6eb;--bg:#fff;--soft:#f5f6f9;--amber:#f5a623;--amber-ink:#14171f;--red:#c9372c;--red-bg:#ffeceb;--green:#216e4e;--green-bg:#dcfff1}
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
-.wrap{max-width:720px;margin:0 auto;padding:0 20px}
-header{padding:20px 0}
-.logo{font-weight:700;letter-spacing:-.01em}
-.hero{padding:56px 0 48px}
-h1{font-size:clamp(32px,6vw,48px);line-height:1.1;letter-spacing:-.02em;margin:0 0 20px}
-h2{font-size:26px;line-height:1.2;letter-spacing:-.01em;margin:0 0 16px}
+img,video{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.narrow{max-width:720px}
+.btn{display:inline-block;background:var(--amber);color:var(--amber-ink);text-decoration:none;font-weight:700;padding:15px 24px;border-radius:10px;line-height:1.2}
+.btn:hover{filter:brightness(1.06)}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.note{font-size:14px;color:var(--muted);margin:12px 0 0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin:0 0 12px}
+h1,h2,h3{letter-spacing:-.02em;margin:0}
+h2{font-size:clamp(26px,4vw,36px);line-height:1.15;margin-bottom:16px}
+h3{font-size:19px;line-height:1.3;margin-bottom:6px}
 p{margin:0 0 16px}
-.lead{font-size:20px;color:var(--muted)}
-.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600;padding:14px 22px;border-radius:8px;margin:8px 0 12px}
-.btn:hover{filter:brightness(1.1)}
-.note{font-size:14px;color:var(--muted)}
-section{padding:48px 0;border-top:1px solid var(--line)}
-ol,ul{margin:0;padding:0;list-style:none}
-li{margin:0 0 16px;padding-left:44px;position:relative}
-ol{counter-reset:s}
-ol li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--soft);border:1px solid var(--line);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
-ul li::before{content:"";position:absolute;left:10px;top:10px;width:10px;height:10px;border-radius:2px;background:var(--accent)}
-.cta{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:32px;margin:48px 0}
-footer{padding:32px 0 48px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
-footer a{color:inherit}
-.demo{margin:0 0 48px}
-.demo video{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#0d1830}
-.demo figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+
+/* top */
+.top{background:var(--navy);color:#fff}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{font-weight:800;font-size:19px;text-decoration:none;color:#fff;letter-spacing:-.01em}
+.logo span{color:var(--amber)}
+.bar .link{font-size:15px;color:#c8d0e6;text-decoration:none}
+.bar .link:hover{color:#fff}
+.hero{padding:40px 0 0;text-align:center}
+.hero h1{font-size:clamp(36px,7vw,64px);line-height:1.05;margin:0 auto 20px;max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero .lead{font-size:clamp(18px,2.4vw,21px);color:#c8d0e6;max-width:640px;margin:0 auto 28px}
+.hero .note{color:#9aa6c4}
+.shot{margin:44px auto 0;max-width:960px;border-radius:14px 14px 0 0;overflow:hidden;box-shadow:0 -10px 60px rgba(0,0,0,.35);border:1px solid #2a3a66;border-bottom:0;background:var(--navy-2)}
+.shot video{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+
+/* flow */
+section{padding:72px 0}
+.soft{background:var(--soft)}
+.center{text-align:center}
+.center .sub{color:var(--muted);max-width:620px;margin:0 auto 40px}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:step}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;text-align:left;position:relative}
+.card .n{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:14px;margin-bottom:14px}
+.card p{color:var(--muted);font-size:16px;margin:0 0 16px}
+.mock{border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.45;background:var(--soft)}
+.mock .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.key{font-weight:700;color:#0c66e4}
+.lozenge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
+.done{background:var(--green-bg);color:var(--green)}
+.high{background:var(--red-bg);color:var(--red)}
+.strike{background:var(--red-bg);text-decoration:line-through;text-decoration-color:var(--red)}
+.mock small{display:block;color:var(--muted);margin-top:6px}
+
+/* proof */
+.proof{display:grid;grid-template-columns:1fr;gap:32px;max-width:900px;margin:0 auto}
+figure{margin:0}
+.frame{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 30px rgba(13,24,48,.08)}
+.frame img{width:100%;height:auto}
+figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.why p{color:var(--muted);font-size:16px;margin:0}
+.ico{width:36px;height:36px;border-radius:10px;background:var(--navy);color:var(--amber);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px}
+
+/* problem */
+.problem p{font-size:18px}
+.problem strong{color:var(--ink)}
+
+/* cta */
+.cta{background:var(--navy);color:#fff;text-align:center}
+.cta h2{color:#fff}
+.cta p{color:#c8d0e6;max-width:600px;margin:0 auto 28px}
+.cta .note{color:#9aa6c4}
+
+footer{padding:36px 0 48px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:14px}
+footer nav a{text-decoration:none;color:var(--ink);font-weight:600}
+footer nav a:hover{text-decoration:underline}
+footer p{margin:0 0 8px}
+
+@media (max-width:860px){
+  .flow,.why{grid-template-columns:1fr}
+  .proof{grid-template-columns:1fr}
+  section{padding:56px 0}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  .hero{padding-top:24px}
+  .btn{display:block;text-align:center}
+  .shot{margin-top:32px;border-radius:10px 10px 0 0}
+  .frame{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .frame img{width:640px;max-width:none}
+  .proof figcaption::after{content:" Swipe to see more.";}
+}
+@media (prefers-reduced-motion:reduce){.shot video{display:none}.shot{background:url(media/afterdone-demo-poster.jpg) center/cover;aspect-ratio:16/9}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header><span class="logo">Afterdone</span></header>
 
-<div class="hero">
-<h1>Stop Rovo from quoting outdated Confluence pages.</h1>
-<p class="lead">When an Epic or issue moves to Done in Jira, the Confluence pages about it quietly go stale. Afterdone flags the exact sentences that no longer match what you shipped, before Rovo serves them as answers.</p>
-<a class="btn" href="https://tally.so/r/LDpX9y">Get a free Rovo Drift Audit</a>
-<p class="note">We review up to 20 of your pages by hand and send you a report within 3 business days. No install, no credit card.</p>
+<div class="top">
+  <div class="wrap">
+    <div class="bar">
+      <a class="logo" href="/">after<span>done</span></a>
+      <a class="link" href="/docs/">Docs</a>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">For dev teams on Jira &amp; Confluence Cloud</p>
+      <h1>Epic Done. Page wrong. <em>You get told.</em></h1>
+      <p class="lead">When work closes in Jira, the Confluence pages about it quietly go out of date. Afterdone finds the exact sentences that no longer match, before Rovo serves them as answers.</p>
+      <a class="btn" href="https://tally.so/r/LDpX9y">Get a free Rovo Drift Audit</a>
+      <p class="note">We review up to 20 of your pages by hand. Report in 3 business days. No install, no credit card.</p>
+    </div>
+    <div class="shot">
+      <video autoplay muted loop playsinline preload="metadata" poster="media/afterdone-demo-poster.jpg" aria-label="57-second demo: an Epic moves to Done in Jira and Afterdone shows the Confluence sentences that now contradict it"><source src="media/afterdone-demo.mp4" type="video/mp4"></video>
+    </div>
+  </div>
 </div>
 
-<figure class="demo">
-<video autoplay muted loop playsinline preload="metadata" poster="media/afterdone-demo-poster.jpg" aria-label="Afterdone demo: a Jira issue moves to Done and the Drift Report shows the Confluence sentences that now contradict it">
-<source src="media/afterdone-demo.mp4" type="video/mp4">
-</video>
-<figcaption>57-second demo: an Epic closes in Jira, Afterdone flags the Confluence sentences it made wrong.</figcaption>
-</figure>
-
-<section>
-<h2>Age isn't the problem. Sprint drift is.</h2>
-<p>A page written last week can already be wrong. Your team closed the Epic, changed the API, dropped the feature, or renamed the plan. The spec, the runbook, and the onboarding guide in Confluence still say the old thing.</p>
-<p>Now Rovo reads those pages and answers with confidence. Your people act on wrong information, and starting December 3, 2026, every one of those Rovo Chat answers draws on your pay-as-you-go credits.</p>
-<p>Stale-page reminders don't catch this. They tell you a page is old, not that it's wrong.</p>
+<section class="soft">
+  <div class="wrap center">
+    <p class="eyebrow">How it works</p>
+    <h2>Three steps, no setup</h2>
+    <p class="sub">Install it and it starts with the next Epic or issue your team closes.</p>
+    <div class="flow">
+      <div class="card">
+        <span class="n">1</span>
+        <h3>Work closes in Jira</h3>
+        <p>An Epic or issue moves to Done. A version release works too, and you can check any issue by hand.</p>
+        <div class="mock"><div class="row"><span><span class="key">AT-4</span> Shorten reset links to 15 min</span><span class="lozenge done">Done</span></div></div>
+      </div>
+      <div class="card">
+        <span class="n">2</span>
+        <h3>The page is now wrong</h3>
+        <p>Afterdone reads the Confluence pages linked to the issue or that mention it, and compares them with what shipped.</p>
+        <div class="mock"><span class="strike">"Reset links stay valid for 24 hours."</span><small>Password reset guide</small></div>
+      </div>
+      <div class="card">
+        <span class="n">3</span>
+        <h3>You get told</h3>
+        <p>The Drift Report shows the sentence, what Jira says, and why. The issue's reporter and assignee get a Jira email.</p>
+        <div class="mock"><div class="row"><span>Links now expire after 15 min</span><span class="lozenge high">High</span></div></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section>
-<h2>How it works</h2>
-<ol>
-<li><strong>Work closes in Jira.</strong> An Epic or issue moves to Done. Using versions? A release works as a trigger too.</li>
-<li><strong>We find the pages it affects.</strong> Pages that reference the issue, link to it, or cover the same feature in the same space.</li>
-<li><strong>We check what changed.</strong> Each page is compared with what was actually shipped, sentence by sentence.</li>
-<li><strong>You get the exact conflict.</strong> A Drift Report shows the sentence that contradicts the shipped work and why, with one-click Reviewed or Dismiss. The issue's reporter and assignee get a Jira email about it.</li>
-</ol>
+  <div class="wrap">
+    <div class="center"><p class="eyebrow">What you actually see</p><h2>The exact sentence, not a stale-page reminder</h2><p class="sub">Real screens from a test site.</p></div>
+    <div class="proof">
+      <figure>
+        <div class="frame"><img src="media/drift-report.jpg" width="900" height="300" loading="lazy" alt="Drift Report table: each row shows severity, the Confluence page, the sentence the page says, what Jira says, why it conflicts, and a Dismiss button"></div>
+        <figcaption>The Drift Report in Jira. Fix the page, or Dismiss the finding.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="media/jira-email.jpg" width="830" height="232" loading="lazy" alt="Jira email: AT-4 reached Done, and Afterdone found 2 sentences on the Password reset guide page that no longer match it"></div>
+        <figcaption>The email Jira sends to the issue's reporter and assignee.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="soft problem">
+  <div class="wrap narrow">
+    <p class="eyebrow">Why now</p>
+    <h2>Age isn't the problem. Drift is.</h2>
+    <p>A page written last week can already be wrong. Your team closed the Epic, changed the API, dropped the feature. The spec, the runbook and the onboarding guide still say the old thing.</p>
+    <p>Rovo reads those pages and answers with confidence. Your people act on wrong information, and <strong>from December 3, 2026, every Rovo Chat answer draws on your credits.</strong></p>
+    <p>Stale-page reminders don't catch this. They tell you a page is old, not that it's wrong.</p>
+  </div>
 </section>
 
 <section>
-<h2>Why teams trust it</h2>
-<ul>
-<li><strong>Runs entirely on Atlassian.</strong> Built on Atlassian Forge. Your content never leaves Atlassian's infrastructure: no external servers, no data egress.</li>
-<li><strong>No automatic changes.</strong> We never edit, archive, or delete a page. Your team decides.</li>
-<li><strong>Precision over noise.</strong> We only flag high-confidence conflicts and always show the sentence, so you can verify in seconds.</li>
-</ul>
+  <div class="wrap">
+    <div class="center"><p class="eyebrow">Built to be trusted</p><h2>Your content stays yours</h2><p class="sub">Made for teams that can't send their docs to outside servers.</p></div>
+    <div class="why">
+      <div><div class="ico">A</div><h3>Runs entirely on Atlassian</h3><p>Built on Atlassian Forge. Your content never leaves Atlassian's infrastructure: no external servers, no data egress.</p></div>
+      <div><div class="ico">✓</div><h3>No automatic changes</h3><p>Afterdone never edits, archives or deletes a page. Your team decides what to fix.</p></div>
+      <div><div class="ico">“</div><h3>Shows its evidence</h3><p>Every finding quotes the page sentence and the Jira text it conflicts with, so you can verify it in seconds.</p></div>
+    </div>
+  </div>
 </section>
 
-<div class="cta">
-<h2>See how much drift you have, before December 3.</h2>
-<p>Tell us a bit about your setup. We'll pick one recently closed Epic with you and show you which Confluence pages contradict it. Free for the first 10 teams.</p>
-<a class="btn" href="https://tally.so/r/LDpX9y">Request my free audit</a>
-<p class="note">We'll only use your email to contact you about the audit. No newsletter, no sharing.</p>
-</div>
-</div>
+<section class="cta">
+  <div class="wrap">
+    <h2>See how much drift you have, before December 3</h2>
+    <p>Tell us about your setup. We'll pick one recently closed Epic with you and show you which Confluence pages contradict it. Free for the first 10 teams.</p>
+    <a class="btn" href="https://tally.so/r/LDpX9y">Get a free Rovo Drift Audit</a>
+    <p class="note">We'll only use your email to contact you about the audit. No newsletter, no sharing.</p>
+  </div>
+</section>
 
 <footer>
-<div class="wrap">
-<p>Afterdone is an independent product and is not affiliated with or endorsed by Atlassian. Jira, Confluence, and Rovo are trademarks of Atlassian.</p>
-<p><a href="/docs/">Docs</a> · <a href="/support/">Support</a> · <a href="/security/">Security</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></p>
-<p>Contact: <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a></p>
-</div>
+  <div class="wrap">
+    <nav><a href="/docs/">Docs</a><a href="/support/">Support</a><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+    <p>Afterdone is an independent product and is not affiliated with or endorsed by Atlassian. Jira, Confluence, and Rovo are trademarks of Atlassian.</p>
+    <p>Contact: <a href="mailto:hello@getafterdone.com">hello@getafterdone.com</a></p>
+  </div>
 </footer>
 </body>
 </html>
